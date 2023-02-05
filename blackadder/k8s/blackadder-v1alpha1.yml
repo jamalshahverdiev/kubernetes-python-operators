@@ -1,0 +1,37 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: chaosagents.blackadder.io
+spec:
+  group: blackadder.io
+  scope: Cluster  # a CRD can also be Namespaced
+  names:
+    plural: chaosagents
+    singular: chaosagent
+    kind: ChaosAgent
+    shortNames:
+    - ca
+  versions:
+  - name: v1alpha1  # you can serve multiple versions e.g v1beta2 or v1alpha1
+    served: true
+    storage: true
+    schema:
+      openAPIV3Schema:
+        type: object
+        properties:
+          spec:
+            type: object
+            properties:
+              tantrumMode:
+                type: boolean
+              podTolerance:
+                type: integer
+    additionalPrinterColumns:
+    - name: Tantrum
+      type: boolean
+      description: Kills Pods randomly
+      jsonPath: .spec.tantrumMode
+    - name: Tolerance
+      type: integer
+      description: Total number of Pod to tolerate before randomly killing Pods
+      jsonPath: .spec.podTolerance

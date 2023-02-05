@@ -1,0 +1,14 @@
+apiVersion: blackadder.io/v1beta1
+kind: ChaosAgent
+metadata:
+  name: princeedmund1
+spec:
+  tantrumMode: true
+  podTolerance: 10
+  cancerMode: true
+  ipsumMode: true
+  eagerness: 20
+  pauseDuration: 30
+  excludedNamespaces:
+    - kube-system
+    - chaos-operator
