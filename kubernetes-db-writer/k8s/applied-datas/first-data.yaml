@@ -1,8 +1,6 @@
 apiVersion: writer.opso.io/v1
 kind: PgdbWriter
 metadata:
-  # finalizers:
-  # - writer.opso.io/finalizer
   name: first-data
   namespace: default
 spec:
