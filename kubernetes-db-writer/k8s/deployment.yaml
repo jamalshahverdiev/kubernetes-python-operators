@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pgdb-writer-operator
+  namespace: dbwriter
+  labels:
+    app: pgdb-writer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pgdb-writer
+  template:
+    metadata:
+      labels:
+        app: pgdb-writer
+    spec:
+      serviceAccountName: pgdb-writer-sa
+      restartPolicy: Always
+      containers:
+      - name: pgdb-writer
+        image: jamalshahverdiev/pgdb-writer:0.0.15
+        imagePullPolicy: IfNotPresent
+        envFrom:
+        - secretRef:
+            name: dbwriter-credentials

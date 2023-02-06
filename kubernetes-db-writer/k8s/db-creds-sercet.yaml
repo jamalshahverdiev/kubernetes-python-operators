@@ -1,0 +1,12 @@
+# secrets.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: dbwriter-credentials
+  namespace: dbwriter
+type: Opaque
+data:
+  PSQL_HOST: MTkyLjE2OC4xODQuMTEw
+  PSQL_USERNAME: ZGJ1c2VybmFtZQ==
+  PSQL_PASSWORD: ZGJwYXNzd29yZA==
+  PSQL_DB: ZGJ3cml0ZXI=

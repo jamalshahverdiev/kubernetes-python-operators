@@ -1,0 +1,11 @@
+apiVersion: writer.opso.io/v1
+kind: PgdbWriter
+metadata:
+  name: second-data
+  namespace: default
+spec:
+  table: companies
+  name: Microsoft
+  registered: false
+  zipcode: 98052
+  country: USA

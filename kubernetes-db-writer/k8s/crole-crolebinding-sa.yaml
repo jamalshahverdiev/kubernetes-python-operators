@@ -1,0 +1,80 @@
+# apiVersion: rbac.authorization.k8s.io/v1
+# kind: ClusterRoleBinding
+# metadata:
+#   name: admin-access
+# subjects:
+# - kind: ServiceAccount 
+#   namespace: postgres
+#   name: postgres-writer
+# roleRef:
+#   kind: ClusterRole
+#   name: cluster-admin
+#   apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: pgdb-writer-sa
+  namespace: dbwriter
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: pgdb-writer-rolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: pgdb-writer-role
+subjects:
+- kind: ServiceAccount 
+  namespace: dbwriter
+  name: pgdb-writer-sa
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: pgdb-writer-role
+rules:
+- apiGroups: ["apiextensions.k8s.io"]
+  resources: ["customresourcedefinitions"]
+  verbs: ["*"]
+- apiGroups: ["writer.opso.io"]
+  resources: ["*"]
+  verbs: ["*"]
+- apiGroups:
+    - ""
+    - "apps"
+    - "batch"
+    - "extensions"
+  resources:
+    # - "configmaps"
+    # - "cronjobs"
+    # - "deployments"
+    - "events"
+    # - "ingresses"
+    # - "jobs"
+    - "pods"
+    # - "pods/attach"
+    # - "pods/exec"
+    # - "pods/log"
+    # - "pods/portforward"
+    # - "secrets"
+    # - "services"
+  verbs:
+    - "create"
+    - "delete"
+    - "describe"
+    - "get"
+    - "list"
+    - "patch"
+    - "update"
+# - apiGroups: ["apps"]
+#   resources: ["deployments"]
+#   verbs: ["get", "list", "patch"]
+# - apiGroups: [""]
+#   resources: ["pods", "events"]
+#   verbs: ["get", "list", "delete"]
+# - apiGroups: [""]
+#   resources: ["configmaps"]
+#   verbs: ["get", "list", "patch"]
+
