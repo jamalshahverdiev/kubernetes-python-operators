@@ -1,0 +1,45 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: policywriters.kyverno.opso.info
+spec:
+  group: kyverno.opso.info
+  names:
+    plural: policywriters
+    singular: policywriter
+    kind: PolicyWriter
+    shortNames:
+      - polwri
+  scope: Namespaced
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          required: ["spec"]
+          properties:
+            spec:
+              type: object
+              required: ["policyanalyzekindname", "policymutatekind", "policymutatename"]
+              properties:
+                policyanalyzekindname:
+                  type: string
+                policymutatekind:
+                  type: string
+                policymutatename:
+                  type: string
+      additionalPrinterColumns:
+      - name: PolicyAnalyzeKindName
+        type: string
+        description: Kind name for policy to analyze
+        jsonPath: .spec.policyanalyzekindname
+      - name: PolicyMutateKind
+        type: string
+        description: Kind name to mutate by kyverno Policy
+        jsonPath: .spec.policymutatekind
+      - name: PolicyMutateName
+        type: string
+        description: Kind name where mutation happens by kyverno Policy
+        jsonPath: .spec.policymutatename

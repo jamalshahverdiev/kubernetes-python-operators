@@ -1,0 +1,9 @@
+apiVersion: kyverno.opso.info/v1
+kind: PolicyWriter
+metadata:
+  name: webapp
+  namespace: check-kyverno
+spec:
+  policyanalyzekindname: webapp-secret
+  policymutatekind: DaemonSet
+  policymutatename: webapp

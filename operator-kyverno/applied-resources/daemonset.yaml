@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  labels:
+    app: webapp
+  name: webapp
+  namespace: check-kyverno
+spec:
+  selector:
+    matchLabels:
+      app: webapp
+  template:
+    metadata:
+      labels:
+        app: webapp
+        team: cloud
+    spec:
+      # nodeSelector:
+      #   kubernetes.io/hostname: 'ip-10-193-42-53.eu-central-1.compute.internal'
+      containers:
+      - image: nginx:latest
+        name: nginx
+        env:
+          - name: DOMAIN
+            valueFrom:
+              secretKeyRef:
+                name: webapp-secret
+                key: domain
+          - name: OWNER
+            valueFrom:
+              secretKeyRef:
+                name: webapp-secret
+                key: owner
+          - name: USER
+            valueFrom:
+              secretKeyRef:
+                name: webapp-secret
+                key: user
+          - name: CERT
+            valueFrom:
+              secretKeyRef:
+                name: webapp-secret
+                key: certificate

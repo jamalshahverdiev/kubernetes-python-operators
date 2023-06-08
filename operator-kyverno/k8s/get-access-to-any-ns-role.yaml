@@ -1,0 +1,31 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: policy-writer-role
+  namespace: check-kyverno
+rules:
+- apiGroups:
+  - kyverno.opso.info
+  resources:
+  - policywriters
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - delete
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: policy-writer-binding
+  namespace: check-kyverno
+subjects:
+- kind: ServiceAccount
+  name: policy-writer-sa
+  namespace: check-kyverno
+roleRef:
+  kind: ClusterRole
+  name: policy-writer-role
+  apiGroup: rbac.authorization.k8s.io

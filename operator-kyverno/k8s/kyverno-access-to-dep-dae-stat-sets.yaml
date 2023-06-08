@@ -1,0 +1,22 @@
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: daemonset-updater
+rules:
+- apiGroups: ["apps"]
+  resources: ["daemonsets"]
+  verbs: ["get", "list", "watch", "update", "patch"]
+
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: kyverno-daemonset-updater
+subjects:
+- kind: ServiceAccount
+  name: kyverno
+  namespace: kyverno
+roleRef:
+  kind: ClusterRole
+  name: daemonset-updater
+  apiGroup: rbac.authorization.k8s.io

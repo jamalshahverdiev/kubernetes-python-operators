@@ -1,0 +1,24 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: kyverno
+  name: deployment-reader
+rules:
+- apiGroups: ["apps"]
+  resources: ["deployments"]
+  verbs: ["get", "watch", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: read-deployments
+  namespace: kyverno
+subjects:
+- kind: ServiceAccount
+  name: policy-writer-sa
+  namespace: policy-writer
+roleRef:
+  kind: Role
+  name: deployment-reader
+  apiGroup: rbac.authorization.k8s.io

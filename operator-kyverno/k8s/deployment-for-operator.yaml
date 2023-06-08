@@ -1,0 +1,24 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: policy-writer-operator
+  namespace: policy-writer
+  labels:
+    app: policy-writer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: policy-writer
+  template:
+    metadata:
+      labels:
+        app: policy-writer
+    spec:
+      serviceAccountName: policy-writer-sa
+      restartPolicy: Always
+      containers:
+      - name: policy-writer
+        image: jamalshahverdiev/policy-writer:0.0.11
+        imagePullPolicy: IfNotPresent
