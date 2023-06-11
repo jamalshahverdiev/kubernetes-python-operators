@@ -20,5 +20,5 @@ spec:
       restartPolicy: Always
       containers:
       - name: policy-writer
-        image: jamalshahverdiev/policy-writer:0.0.26
+        image: jamalshahverdiev/policy-writer:0.0.27
         imagePullPolicy: IfNotPresent

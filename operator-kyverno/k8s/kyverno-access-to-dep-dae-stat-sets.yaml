@@ -4,7 +4,7 @@ metadata:
   name: daemonset-updater
 rules:
 - apiGroups: ["apps"]
-  resources: ["daemonsets"]
+  resources: ["daemonsets", "deployments", "statefulsets"]
   verbs: ["get", "list", "watch", "update", "patch"]
 
 ---

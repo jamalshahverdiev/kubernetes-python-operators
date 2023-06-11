@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: webapp
+  name: webapp
+  namespace: check-kyverno
+spec:
+  selector:
+    matchLabels:
+      app: webapp
+  template:
+    metadata:
+      labels:
+        app: webapp
+        team: cloud
+    spec:
+      containers:
+      - image: nginx:latest
+        name: nginx
+        env:
+          - name: DOMAIN
+            valueFrom:
+              secretKeyRef:
+                name: webapp-secret
+                key: domain
+          - name: OWNER
+            valueFrom:
+              secretKeyRef:
+                name: webapp-secret
+                key: owner
+          - name: USER
+            valueFrom:
+              secretKeyRef:
+                name: webapp-secret
+                key: user
+          - name: CERT
+            valueFrom:
+              secretKeyRef:
+                name: webapp-secret
+                key: certificate
