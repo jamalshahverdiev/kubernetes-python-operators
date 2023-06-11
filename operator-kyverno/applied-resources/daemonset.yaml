@@ -15,8 +15,6 @@ spec:
         app: webapp
         team: cloud
     spec:
-      # nodeSelector:
-      #   kubernetes.io/hostname: 'ip-10-193-42-53.eu-central-1.compute.internal'
       containers:
       - image: nginx:latest
         name: nginx
