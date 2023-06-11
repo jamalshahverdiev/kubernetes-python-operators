@@ -4,16 +4,16 @@ from src.functions import create_or_update_policy, initialize_kube, get_policy_n
 from src.variables import Settings
 from kubernetes import client
 
-@on.create('kyverno.opso.info', 'v1', 'policywriters')
+@on.create(Settings.crd_group_name, Settings.version, Settings.crd_kind_name)
 def create_fn(body, spec, meta, namespace, logger, **kwargs):
     return create_or_update_policy(spec, meta, logger, action='create')
 
-@on.update('kyverno.opso.info', 'v1', 'policywriters')
+@on.update(Settings.crd_group_name, Settings.version, Settings.crd_kind_name)
 def update_fn(body, spec, meta, namespace, logger, **kwargs):
     return create_or_update_policy(spec, meta, logger, action='update')
 
 
-@on.delete('kyverno.opso.info', 'v1', 'policywriters')
+@on.delete(Settings.crd_group_name, Settings.version, Settings.crd_kind_name)
 def delete_fn(body, spec, meta, namespace, logger, **kwargs):
     # Print the spec to debug its content
     logger.info(f"Spec content: {spec}")
