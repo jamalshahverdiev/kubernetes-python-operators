@@ -13,7 +13,7 @@ spec:
     metadata:
       labels:
         app: webapp
-        team: cloud
+        team: devops
     spec:
       containers:
       - image: nginx:latest

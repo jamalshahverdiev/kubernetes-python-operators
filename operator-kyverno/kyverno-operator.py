@@ -6,12 +6,11 @@ from kubernetes import client
 
 @on.create(Settings.crd_group_name, Settings.version, Settings.crd_kind_name)
 def create_fn(body, spec, meta, namespace, logger, **kwargs):
-    return create_or_update_policy(spec, meta, logger, action='create')
+    return create_or_update_policy(Settings.template_file, spec, meta, logger, action='create')
 
 @on.update(Settings.crd_group_name, Settings.version, Settings.crd_kind_name)
 def update_fn(body, spec, meta, namespace, logger, **kwargs):
-    return create_or_update_policy(spec, meta, logger, action='update')
-
+    return create_or_update_policy(Settings.template_file, spec, meta, logger, action='update')
 
 @on.delete(Settings.crd_group_name, Settings.version, Settings.crd_kind_name)
 def delete_fn(body, spec, meta, namespace, logger, **kwargs):

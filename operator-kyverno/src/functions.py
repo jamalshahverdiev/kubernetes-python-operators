@@ -17,9 +17,19 @@ def initialize_kube():
 def get_policy_name(spec):
     return 'restart-{}-on-{}-change'.format(spec.get('policymutatekind').lower(), spec.get('policyanalyzekindname').lower())
     
-def get_kyverno_version(name, namespace):
+def get_kyverno_version(namespace):
     api_instance = client.AppsV1Api()
-    deployment = api_instance.read_namespaced_deployment(name, namespace)
+    
+    # Get all deployments in the Kyverno namespace
+    deployments = api_instance.list_namespaced_deployment(namespace)
+    
+    # Check if there are any deployments
+    if not deployments.items:
+        raise ValueError(f"No deployments found in namespace {namespace}")
+    
+    # Select the first deployment
+    deployment = deployments.items[0]
+    
     image = deployment.spec.template.spec.containers[0].image
     kyverno_version = image.split(":")[-1]
     
@@ -38,14 +48,14 @@ def get_kubernetes_version():
     
     return kubernetes_version
         
-def create_or_update_policy(spec, meta, logger, action):
+def create_or_update_policy(template_file, spec, meta, logger, action):
     policyanalyzekindname = spec.get('policyanalyzekindname')
     policymutatekind = spec.get('policymutatekind')
     policymutatename = spec.get('policymutatename')
     
     policy_name = get_policy_name(spec)
 
-    with open('templates/policy-file.json', 'r') as f:
+    with open(template_file, 'r') as f:
         policy = load(f)
         
     policy = loads(dumps(policy).replace(
@@ -62,15 +72,14 @@ def create_or_update_policy(spec, meta, logger, action):
         "<<policymutatekind_lower>>", policymutatekind.lower()
     ))
     
-
     group = Settings.group
     version = Settings.version
     namespace = meta.get('namespace')
     plural = Settings.plural
 
     # Set dynamic values for annotations    
-    policy['metadata']['annotations']['kyverno.io/kyverno-version'] = get_kyverno_version(Settings.kyverno_namespace, Settings.kyverno_namespace)
-    policy['metadata']['annotations']['policies.kyverno.io/minversion'] = get_kyverno_version(Settings.kyverno_namespace, Settings.kyverno_namespace)
+    policy['metadata']['annotations']['kyverno.io/kyverno-version'] = get_kyverno_version(Settings.kyverno_namespace)
+    policy['metadata']['annotations']['policies.kyverno.io/minversion'] = get_kyverno_version(Settings.kyverno_namespace)
     policy['metadata']['annotations']['kyverno.io/kubernetes-version'] = get_kubernetes_version()
 
 
