@@ -1,0 +1,35 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: replica-checker-clusterrole
+rules:
+- apiGroups:
+  - "replicachecker.opso.info"
+  - ""
+  - "apps"
+  resources:
+  - "replicacheckers"
+  - "events"
+  - "deployments"
+  - "pods"
+  - "namespaces"
+  verbs:
+  - get
+  - list
+  - watch
+  - patch
+  - create
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: replica-checker-clusterrolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: replica-checker-clusterrole
+subjects:
+- kind: ServiceAccount
+  name: replica-checker-sa
+  namespace: replicachecker

@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: replica-checker
+  namespace: replicachecker
+  labels:
+    app: replica-checker
+spec:
+  schedule: "* * * * *"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: replica-checker
+        spec:
+          serviceAccountName: replica-checker-sa
+          restartPolicy: OnFailure
+          containers:
+          - name: replica-checker
+            image: jamalshahverdiev/deployrestarter:1.0.2
+            imagePullPolicy: IfNotPresent

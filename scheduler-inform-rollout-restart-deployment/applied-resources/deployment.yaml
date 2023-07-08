@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deplayer
+  namespace: checkrestarter
+  labels:
+    app: deplayer
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: deplayer
+  template:
+    metadata:
+      labels:
+        app: deplayer
+    spec:
+      containers:
+      - name: deplayer
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
