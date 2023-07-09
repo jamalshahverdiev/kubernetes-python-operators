@@ -2,6 +2,7 @@ from kubernetes import client, config
 from os import getenv, path
 from datetime import datetime
 from kubernetes.client.rest import ApiException
+from kubernetes.client import CoreV1Api
 from src.variables import Settings
 
 def initialize_kube():
@@ -76,7 +77,27 @@ def get_deployments_in_namespace(namespace):
     print(f'Found {len(deployments)} deployments in namespace `{namespace}`.')
     return deployments
 
+def get_ready_nodes():
+    v1 = CoreV1Api()
+    ready_nodes = 0
+    for node in v1.list_node().items:
+        # Skip the node if it's a master node
+        if Settings.label_master_node in node.metadata.labels:
+            continue
+        for condition in node.status.conditions:
+            if condition.type == 'Ready' and condition.status == 'True':
+                ready_nodes += 1
+
+    return ready_nodes
+
 def restart_deployments_if_needed():
+    
+    # Check if there are at least 2 nodes in 'Ready' state
+    ready_nodes = get_ready_nodes()
+    if ready_nodes < 2:
+        print(f'Only {ready_nodes} node(s) in `Ready` state. No action taken.')
+        return
+    
     # For each namespace with the annotation
     for ns in get_namespaces_with_annotation():
         # Get deployments in the namespace

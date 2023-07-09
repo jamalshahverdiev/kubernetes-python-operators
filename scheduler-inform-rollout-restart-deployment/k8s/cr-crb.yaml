@@ -5,15 +5,14 @@ metadata:
   name: replica-checker-clusterrole
 rules:
 - apiGroups:
-  - "replicachecker.opso.info"
   - ""
   - "apps"
   resources:
-  - "replicacheckers"
   - "events"
   - "deployments"
   - "pods"
   - "namespaces"
+  - "nodes"
   verbs:
   - get
   - list
