@@ -16,6 +16,7 @@ def initialize_kube():
         print("Loading In-cluster KUBECONFIG")
         config.load_incluster_config()
 
+
 def get_unique_nodes_for_deployment_in_namespace(namespace, deployment_name):
     try:
         api_instance = client.AppsV1Api()
@@ -29,17 +30,21 @@ def get_unique_nodes_for_deployment_in_namespace(namespace, deployment_name):
             print(f'Replica count for {deployment_name} is less than 2. Not continuing.')
             return
 
-        # Fetch all Pods for the given Deployment
+        # Fetch all Pods in the given namespace
         v1 = client.CoreV1Api()
-        pods = v1.list_namespaced_pod(namespace, label_selector=f'app={deployment_name}')
+        all_pods = v1.list_namespaced_pod(namespace)
+
+        # Filter pods based on deployment name
+        pods = list(filter(lambda pod: deployment_name in pod.metadata.name, all_pods.items))
 
         # Get unique nodes that the Pods are running on
-        nodes = set([pod.spec.node_name for pod in pods.items])
-
+        nodes = set([pod.spec.node_name for pod in pods])
+        # print("Nodes count: ", len(nodes), "From deployment: ", deployment_name)
         return len(nodes)
 
     except ApiException as e:
         print(f"Exception when calling Kubernetes API: {e}")
+
 
 def restart_deployment(namespace, deployment_name):
     print(f'Rollout restart deployment `{deployment_name}` in namespace `{namespace}`.')
@@ -104,7 +109,7 @@ def restart_deployments_if_needed():
         for deployment in get_deployments_in_namespace(ns):
             depl_name = deployment.metadata.name
             node_count = get_unique_nodes_for_deployment_in_namespace(ns, depl_name)
-
+            
             # Restart the deployment if there are fewer than 2 nodes
             if node_count and node_count < 2:
                 print(f'Node count is less than 2 for deployment `{depl_name}`. Restarting deployment `{depl_name}`.')
