@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hook-deployment
+  labels:
+    app: hook-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hook-deployment
+  template:
+    metadata:
+      labels:
+        app: hook-deployment
+        version: "1.0.4"
+    spec:
+      containers:
+      - name: hook-deployment
+        image: nginx:latest
+        ports:
+        - containerPort: 80

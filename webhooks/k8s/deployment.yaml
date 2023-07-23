@@ -1,0 +1,25 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webhook-server
+  namespace: kubehook
+  labels:
+    app: webhook-server
+    version: "1.0.4"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webhook-server
+  template:
+    metadata:
+      labels:
+        app: webhook-server
+    spec:
+      containers:
+      - name: webhook-server
+        image: jamalshahverdiev/kubehook:1.0.4
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 443

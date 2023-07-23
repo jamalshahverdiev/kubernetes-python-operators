@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: hook-pod
+  labels:
+    app: hook-pod
+    version: "1.0.4"
+spec:
+  containers:
+  - name: hook-pod
+    image: k8s.gcr.io/busybox
+    command: ['sh', '-c', 'echo Hello Kubernetes! && sleep 3600']

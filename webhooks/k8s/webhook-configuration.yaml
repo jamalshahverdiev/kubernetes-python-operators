@@ -1,0 +1,39 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: mutating-webhook-configuration
+webhooks:
+  - name: mutate.webhook-service.svc
+    admissionReviewVersions: ["v1", "v1beta1"]
+    sideEffects: None
+    clientConfig:
+      service:
+        name: webhook-service
+        namespace: kubehook
+        path: "/mutate"
+      caBundle: "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURKakNDQWc2Z0F3SUJBZ0lVY2o5NmhCbmZkK08vakxld0EyQk43VkFveUtBd0RRWUpLb1pJaHZjTkFRRUwKQlFBd0p6RWxNQ01HQTFVRUF3d2NkMlZpYUc5dmF5MXpaWEoyYVdObExtdDFZbVZvYjI5ckxuTjJZekFlRncweQpNekEzTWpNeE16SXhORFphRncweU5EQTNNakl4TXpJeE5EWmFNQ2N4SlRBakJnTlZCQU1NSEhkbFltaHZiMnN0CmMyVnlkbWxqWlM1cmRXSmxhRzl2YXk1emRtTXdnZ0VpTUEwR0NTcUdTSWIzRFFFQkFRVUFBNElCRHdBd2dnRUsKQW9JQkFRQ3Y2UEl6dGt6RUhGVFdXdG9kS0g0VUZBYWpOZ3V4MmFjWWM1bE1HNFRlRWNkVG5PVEdYeDNyb0UyaAoveGMyc2dpRVRmZUUwTEE4dnl4NHRPOGJUN0owM3VqNDA5UUtJYTNCUno3ckFycVpqSUpRU1ltQXBPWnc0bGlsCjVaTzlhMllMMnN3UDM4eHhjcGlYMlJLdXZNRVovc2w1eHh3SlBZdXkxQnkvQnBlbzNlN0tHa28rN0l0Zlc5ZDIKQ242dFZmL2UwT3hxUW92NkNIY0Vsbm5oUENVeStvbkhDRTVjNFhhbTVEanR0aXhZTGJ6d3Q2Q1lJZ3BCNytNawpLZjRmMDc2eisxS1cvVlBXQis4U0xzWXJlSnBnWUtRRXdEYnhOMEU3ZjZvVzAzY0grOUpsQjNCbjZmQ0ZSWHU0CllUaTdBNWRYSDdMUjJycmM5WWlERVI0L3E5ZkpBZ01CQUFHalNqQklNQ2NHQTFVZEVRUWdNQjZDSEhkbFltaHYKYjJzdGMyVnlkbWxqWlM1cmRXSmxhRzl2YXk1emRtTXdIUVlEVlIwT0JCWUVGTGh0VThzQXlVRFI5VFJtcUR0TQpMRkh5VU5udE1BMEdDU3FHU0liM0RRRUJDd1VBQTRJQkFRQXVKNjRXcjRiRWZ0dkVFUE1wSWZ6b3Q2Z1ZhWlQwClJNWSt0WEtnQUw4SlVkMEphV0JXaUNKd05UU1lpOG8ySlVGK3duTXFpQVdOUVBzUWh0Y0hBWnVSc3VSZnFBYjAKZWE1MzlNT0ZtNFcvSGdSaG1lcWYvZm5CQ3RCQjdtamlNV01oU2xpSG5tZkdzWDd2Nm8rNUkxajBBRWIxcEdoSgpSYnlsOFpzOVcyeWVTWXBYWnlGbEhsRk0zSGJwODZiSG9GdmNNRUZwNHBWSUh3ZThSQ2k5MlEycTdJelhZS3A5CnhjRHJOa1plYjhBSVovUldSamcrNnhWWForUUU5ejV5OFpLTFFiS1Y5dVlBQ3lBM1ZSbTZ6WmpydUc0blJkUU8KQTEvL2x1RU1yZmxuU0NORUFRZG1LOHRzMk05TUlLcHJuc2RzZ0w0d3pVaXJNWWlVUGJpREVCMXAKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo="
+    rules:
+      - operations: ["CREATE", "UPDATE"]
+        apiGroups: ["", "apps"]
+        apiVersions: ["v1"]
+        resources: ["pods", "deployments"]
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: validating-webhook-configuration
+webhooks:
+  - name: validate.webhook-service.svc
+    admissionReviewVersions: ["v1", "v1beta1"]
+    sideEffects: None
+    clientConfig:
+      service:
+        name: webhook-service
+        namespace: kubehook
+        path: "/validate"
+      caBundle: "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURKakNDQWc2Z0F3SUJBZ0lVY2o5NmhCbmZkK08vakxld0EyQk43VkFveUtBd0RRWUpLb1pJaHZjTkFRRUwKQlFBd0p6RWxNQ01HQTFVRUF3d2NkMlZpYUc5dmF5MXpaWEoyYVdObExtdDFZbVZvYjI5ckxuTjJZekFlRncweQpNekEzTWpNeE16SXhORFphRncweU5EQTNNakl4TXpJeE5EWmFNQ2N4SlRBakJnTlZCQU1NSEhkbFltaHZiMnN0CmMyVnlkbWxqWlM1cmRXSmxhRzl2YXk1emRtTXdnZ0VpTUEwR0NTcUdTSWIzRFFFQkFRVUFBNElCRHdBd2dnRUsKQW9JQkFRQ3Y2UEl6dGt6RUhGVFdXdG9kS0g0VUZBYWpOZ3V4MmFjWWM1bE1HNFRlRWNkVG5PVEdYeDNyb0UyaAoveGMyc2dpRVRmZUUwTEE4dnl4NHRPOGJUN0owM3VqNDA5UUtJYTNCUno3ckFycVpqSUpRU1ltQXBPWnc0bGlsCjVaTzlhMllMMnN3UDM4eHhjcGlYMlJLdXZNRVovc2w1eHh3SlBZdXkxQnkvQnBlbzNlN0tHa28rN0l0Zlc5ZDIKQ242dFZmL2UwT3hxUW92NkNIY0Vsbm5oUENVeStvbkhDRTVjNFhhbTVEanR0aXhZTGJ6d3Q2Q1lJZ3BCNytNawpLZjRmMDc2eisxS1cvVlBXQis4U0xzWXJlSnBnWUtRRXdEYnhOMEU3ZjZvVzAzY0grOUpsQjNCbjZmQ0ZSWHU0CllUaTdBNWRYSDdMUjJycmM5WWlERVI0L3E5ZkpBZ01CQUFHalNqQklNQ2NHQTFVZEVRUWdNQjZDSEhkbFltaHYKYjJzdGMyVnlkbWxqWlM1cmRXSmxhRzl2YXk1emRtTXdIUVlEVlIwT0JCWUVGTGh0VThzQXlVRFI5VFJtcUR0TQpMRkh5VU5udE1BMEdDU3FHU0liM0RRRUJDd1VBQTRJQkFRQXVKNjRXcjRiRWZ0dkVFUE1wSWZ6b3Q2Z1ZhWlQwClJNWSt0WEtnQUw4SlVkMEphV0JXaUNKd05UU1lpOG8ySlVGK3duTXFpQVdOUVBzUWh0Y0hBWnVSc3VSZnFBYjAKZWE1MzlNT0ZtNFcvSGdSaG1lcWYvZm5CQ3RCQjdtamlNV01oU2xpSG5tZkdzWDd2Nm8rNUkxajBBRWIxcEdoSgpSYnlsOFpzOVcyeWVTWXBYWnlGbEhsRk0zSGJwODZiSG9GdmNNRUZwNHBWSUh3ZThSQ2k5MlEycTdJelhZS3A5CnhjRHJOa1plYjhBSVovUldSamcrNnhWWForUUU5ejV5OFpLTFFiS1Y5dVlBQ3lBM1ZSbTZ6WmpydUc0blJkUU8KQTEvL2x1RU1yZmxuU0NORUFRZG1LOHRzMk05TUlLcHJuc2RzZ0w0d3pVaXJNWWlVUGJpREVCMXAKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo="
+    rules:
+      - operations: ["CREATE", "UPDATE"]
+        apiGroups: ["", "apps"]
+        apiVersions: ["v1"]
+        resources: ["pods", "deployments"]
