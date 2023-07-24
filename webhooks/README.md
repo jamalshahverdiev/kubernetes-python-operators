@@ -27,3 +27,19 @@ $ cat certs/server.crt | base64 | tr -d '\n'
 $ kubectl describe pod test-pod
 ```
 
+#### Apply needed manifests 
+
+```bash
+$ kubectl apply -f k8s/ns.yaml
+$ kubectl apply -f k8s/service.yaml
+$ kubectl apply -f k8s/deployment.yaml
+$ kubectl apply -f k8s/webhook-configuration.yaml
+```
+
+#### To test it we can use these manifests
+
+```bash
+$ kubectl apply -f applied-resources/pod.yaml
+$ kubectl apply -f applied-resources/deployment.yaml
+```
+
