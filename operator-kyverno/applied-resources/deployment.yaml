@@ -6,6 +6,7 @@ metadata:
   name: webapp
   namespace: check-kyverno
 spec:
+  replicas: 3
   selector:
     matchLabels:
       app: webapp
