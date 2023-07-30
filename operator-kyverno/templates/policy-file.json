@@ -40,11 +40,6 @@
                             "key": "{{request.operation}}",
                             "operator": "Equals",
                             "value": "UPDATE"
-                        },
-                        {
-                            "key": "{{ equal_fold('{{request.object.data}}', '{{request.oldObject.data}}') }}",
-                            "operator": "NotEquals",
-                            "value": "true"
                         }
                     ]
                 },
