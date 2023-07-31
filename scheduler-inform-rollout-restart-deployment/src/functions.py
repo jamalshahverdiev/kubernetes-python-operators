@@ -82,6 +82,7 @@ def get_deployments_in_namespace(namespace):
     print(f'Found {len(deployments)} deployments in namespace `{namespace}`.')
     return deployments
 
+
 def get_ready_nodes():
     v1 = CoreV1Api()
     ready_nodes = 0
@@ -89,16 +90,25 @@ def get_ready_nodes():
         # Skip the node if it's a master node
         if Settings.label_master_node in node.metadata.labels:
             continue
+        # Check if node is unschedulable
+        if node.spec.unschedulable:
+            continue
+        # Check if node has a NoSchedule taint
+        if any(taint.effect == "NoSchedule" for taint in node.spec.taints or []):
+            continue
         for condition in node.status.conditions:
             if condition.type == 'Ready' and condition.status == 'True':
                 ready_nodes += 1
 
     return ready_nodes
 
+
 def restart_deployments_if_needed():
     
     # Check if there are at least 2 nodes in 'Ready' state
     ready_nodes = get_ready_nodes()
+    print(f"Count of the ready_nodes: {ready_nodes}")
+    
     if ready_nodes < 2:
         print(f'Only {ready_nodes} node(s) in `Ready` state. No action taken.')
         return
