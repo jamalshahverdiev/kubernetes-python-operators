@@ -14,7 +14,7 @@ $ docker push jamalshahverdiev/deployrestarter:1.0.3
 #### Drain and uncordon
 
 ```bash
-$ kubectl drain db1 --ignore-daemonsets --delete-emptydir-data --ignore-daemons
+$ kubectl drain db1 --ignore-daemonsets --delete-emptydir-data
 $ kubectl uncordon db1
 ```
 
