@@ -2,8 +2,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nginx-deployment
+  namespace: checkrestarter
 spec:
-  replicas: 7
+  replicas: 3
   selector:
     matchLabels:
       app: nginx

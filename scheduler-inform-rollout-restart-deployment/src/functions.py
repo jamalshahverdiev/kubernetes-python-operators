@@ -67,6 +67,7 @@ def restart_deployment(namespace, deployment_name):
     apps_v1_api.patch_namespaced_deployment(deployment_name, namespace, deployment)
     print(f'Deployment `{deployment_name}` in namespace `{namespace}` has been restarted.')
 
+
 def get_namespaces_with_annotation():
     print('Getting namespaces with annotation.')
     v1 = client.CoreV1Api()
@@ -74,6 +75,7 @@ def get_namespaces_with_annotation():
     annotated_namespaces = [ns.metadata.name for ns in namespaces if ns.metadata.annotations and ns.metadata.annotations.get(Settings.deploy_annotations) == Settings.deploy_annotations_value]
     print(f'Found {len(annotated_namespaces)} namespaces with annotation: {annotated_namespaces}')
     return annotated_namespaces
+
 
 def get_deployments_in_namespace(namespace):
     print(f'Getting deployments in namespace `{namespace}`.')

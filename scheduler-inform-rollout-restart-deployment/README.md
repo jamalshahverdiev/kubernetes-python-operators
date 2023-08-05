@@ -10,3 +10,28 @@ $ kubectl patch namespace checkrestarter -p '{"metadata":{"annotations":{"collec
 $ docker build -t jamalshahverdiev/deployrestarter:1.0.3 .
 $ docker push jamalshahverdiev/deployrestarter:1.0.3
 ```
+
+#### Drain and uncordon
+
+```bash
+$ kubectl drain db1 --ignore-daemonsets --delete-emptydir-data --ignore-daemons
+$ kubectl uncordon db1
+```
+
+#### Suspend Cronjobs
+
+```bash
+$ kubectl patch cronjobs replica-checker -n replicachecker -p '{"spec" : {"suspend" : true }}'
+```
+
+#### Patch namespace `check-kyverno`
+
+```bash
+$ kubectl annotate namespace check-kyverno collectdeployments=allow --overwrite
+```
+
+#### Watch to the rsources
+
+```bash
+$ watch -n1 'for ns in checkrestarter check-kyverno; do kubectl get pods -n $ns -o wide; done'
+```

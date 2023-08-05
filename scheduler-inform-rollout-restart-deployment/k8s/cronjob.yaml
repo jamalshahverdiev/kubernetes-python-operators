@@ -18,5 +18,5 @@ spec:
           restartPolicy: OnFailure
           containers:
           - name: replica-checker
-            image: jamalshahverdiev/deployrestarter:1.0.14
+            image: jamalshahverdiev/deployrestarter:1.0.15
             imagePullPolicy: IfNotPresent
