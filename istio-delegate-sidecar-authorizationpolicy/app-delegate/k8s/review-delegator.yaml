@@ -1,0 +1,11 @@
+apiVersion: istio.opso.info/v1
+kind: Delegator
+metadata:
+  name: reviews-delegator
+  namespace: default
+spec:
+  domain: "bookinfo.local"
+  gateway: "istio-system/global-gateway"
+  uriprefix: "/reviews"
+  delegatevs: "reviews"
+  delegatevsns: "review"

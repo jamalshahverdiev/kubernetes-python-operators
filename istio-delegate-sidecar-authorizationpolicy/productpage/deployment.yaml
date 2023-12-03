@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: productpage
+  namespace: products
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: productpage
+      team: cloud
+      alert_team: cloud
+      opso.dom/argocd: controlled-by-argocd
+  template:
+    metadata:
+      labels:
+        app: productpage
+        team: cloud
+        alert_team: cloud
+        opso.dom/argocd: controlled-by-argocd
+    spec:
+      containers:
+      - name: productpage
+        image: jamalshahverdiev/delegatevs:p0.0.2
+        ports:
+        - containerPort: 80

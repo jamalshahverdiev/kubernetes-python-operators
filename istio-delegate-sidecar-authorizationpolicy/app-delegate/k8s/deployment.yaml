@@ -1,0 +1,24 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: delegator-operator
+  namespace: delegator
+  labels:
+    app: delegator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: delegator
+  template:
+    metadata:
+      labels:
+        app: delegator
+    spec:
+      serviceAccountName: delegator-sa
+      restartPolicy: Always
+      containers:
+      - name: delegator
+        image: jamalshahverdiev/delegatevs:d0.0.10
+        imagePullPolicy: IfNotPresent

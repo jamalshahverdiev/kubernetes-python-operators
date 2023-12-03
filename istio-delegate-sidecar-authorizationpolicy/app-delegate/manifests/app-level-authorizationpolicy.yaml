@@ -1,0 +1,29 @@
+apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy
+metadata:
+  labels:
+    app: productpage
+    team: cloud
+    alert_team: cloud
+    opso.dom/argocd: controlled-by-argocd
+  name: products-authorization-policy
+  namespace: products
+spec:
+  action: ALLOW
+  rules:
+  - from:
+    - source:
+        namespaces:
+        - monitoring-prod
+    to:
+    - operation:
+        paths:
+        - /metrics
+        ports:
+        - "9201"
+  selector:
+    matchLabels:
+      app: productpage
+      team: cloud
+      alert_team: cloud
+      opso.dom/argocd: controlled-by-argocd

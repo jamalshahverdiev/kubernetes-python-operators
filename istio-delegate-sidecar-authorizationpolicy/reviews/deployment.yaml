@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reviews
+  namespace: review
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: reviews
+      team: cloud
+      alert_team: cloud
+      opso.dom/argocd: controlled-by-argocd
+  template:
+    metadata:
+      labels:
+        app: reviews
+        team: cloud
+        alert_team: cloud
+        opso.dom/argocd: controlled-by-argocd
+    spec:
+      containers:
+      - name: reviews
+        image: jamalshahverdiev/delegatevs:r0.0.2
+        ports:
+        - containerPort: 80
