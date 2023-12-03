@@ -1,0 +1,24 @@
+
+apiVersion: networking.istio.io/v1beta1
+kind: Sidecar
+metadata:
+  labels:
+    alert_team: cloud
+    app: productpage
+    opso.dom/argocd: controlled-by-argocd
+    team: cloud
+  name: products-sidecar
+  namespace: products
+spec:
+  egress:
+  - hosts:
+    - istio-system/*
+    - monitoring-prod/*
+    - istio-egress-gateway/*
+    - products/*
+  workloadSelector:
+    labels:
+      app: productpage
+      team: cloud
+      alert_team: cloud
+      opso.dom/argocd: controlled-by-argocd

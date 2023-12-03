@@ -1,0 +1,63 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: delegators.istio.opso.info
+spec:
+  group: istio.opso.info
+  names:
+    plural: delegators
+    singular: delegator
+    kind: Delegator
+    shortNames:
+      - deleg
+  scope: Namespaced
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          description: Delegator is the Schema for the delegators API
+          type: object
+          required: ["spec"]
+          properties:
+            spec:
+              type: object
+              required: ["domain", "gateway", "uriprefix", "delegatevs", "delegatevsns"]
+              properties:
+                domain:
+                  description: Domain name which will be delegated to istio VirtualService
+                  type: string
+                gateway:
+                  description: Gateway name to where domain will be delegated
+                  type: string
+                uriprefix:
+                  description: URI prefix which will be delegated to defined istio VirtualService
+                  type: string
+                delegatevs:
+                  description: VirtualService name which will take delegation of defined domain and URI prefix
+                  type: string
+                delegatevsns:
+                  description: VirtualService namespace name where delegated VirtualService is located
+                  type: string
+      additionalPrinterColumns:
+      - name: domain
+        type: string
+        description: Domain name which will be delegated to istio VirtualService
+        jsonPath: .spec.domain
+      - name: gateway
+        type: string
+        description: Gateway name to where domain will be delegated
+        jsonPath: .spec.gateway
+      - name: uriprefix
+        type: string
+        description: URI prefix which will be delegated to defined istio VirtualService
+        jsonPath: .spec.uriprefix
+      - name: delegatevs
+        type: string
+        description: VirtualService name which will take delegation of defined domain and URI prefix
+        jsonPath: .spec.delegatevs
+      - name: delegatevsns
+        type: string
+        description: VirtualService namespace name where delegated VirtualService is located
+        jsonPath: .spec.delegatevsns

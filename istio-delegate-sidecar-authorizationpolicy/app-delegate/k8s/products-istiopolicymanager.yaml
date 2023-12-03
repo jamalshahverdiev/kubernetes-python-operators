@@ -1,0 +1,32 @@
+apiVersion: istio.opso.info/v1
+kind: IstioPolicyManager
+metadata:
+  name: products-istio-policy-manager
+  namespace: products
+spec:
+  labels:
+    app: productpage
+    team: cloud
+    alert_team: cloud
+    opso.dom/argocd: controlled-by-argocd
+  egressHosts:
+    - istio-system/*
+    - monitoring-prod/*
+    - istio-egress-gateway/*
+    - products/*
+  policyRules:
+    - from:
+        source:
+          namespaces:
+            - monitoring-prod
+      to:
+        operation:
+          paths:
+            - /metrics
+          ports:
+            - "9201"
+  selector:
+    app: productpage
+    team: cloud
+    alert_team: cloud
+    opso.dom/argocd: controlled-by-argocd

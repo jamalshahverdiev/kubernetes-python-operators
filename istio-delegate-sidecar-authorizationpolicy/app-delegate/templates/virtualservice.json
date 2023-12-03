@@ -1,0 +1,21 @@
+{
+    "apiVersion": "{{ istio_group }}/{{ istio_version }}",
+    "kind": "VirtualService",
+    "metadata": {
+        "name": "{{ delegatevs }}",
+        "namespace": "{{ namespace }}"
+    },
+    "spec": {
+        "hosts": ["{{ domain }}"],
+        "gateways": ["{{ gateway }}"],
+        "http": [
+            {
+                "match": [{"uri": {"prefix": "{{ uriprefix }}"}}],
+                "delegate": {
+                    "name": "{{ delegatevs }}",
+                    "namespace": "{{ delegatevsns }}"
+                }
+            }
+        ]
+    }
+}

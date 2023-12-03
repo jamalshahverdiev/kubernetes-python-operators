@@ -1,0 +1,92 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: istiopolicymanagers.istio.opso.info
+spec:
+  group: istio.opso.info
+  names:
+    plural: istiopolicymanagers
+    singular: istiopolicymanager
+    kind: IstioPolicyManager
+    shortNames:
+      - ipm
+  scope: Namespaced
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          description: IstioPolicyManager is a custom resource used for configuring Istio Sidecar and AuthorizationPolicy resources dynamically in a Kubernetes namespace.
+          type: object
+          required: ["spec"]
+          properties:
+            spec:
+              type: object
+              required: ["labels", "egressHosts", "policyRules", "selector"]
+              properties:
+                labels:
+                  description: "Common labels that will be applied to both the Sidecar and AuthorizationPolicy resources. These labels help in identifying and grouping the created resources."
+                  type: object
+                  additionalProperties:
+                    type: string
+                egressHosts:
+                  description: "A list of hosts for the Sidecar's egress rules. This defines the external services that pods within the namespace are allowed to communicate with."
+                  type: array
+                  items:
+                    type: string
+                policyRules:
+                  description: "Defines the rules for the AuthorizationPolicy, specifying which sources are allowed to access certain paths and ports. These rules dictate the inbound access control for the workloads."
+                  type: array
+                  items:
+                    type: object
+                    required: ["from", "to"]
+                    properties:
+                      from:
+                        type: object
+                        required: ["source"]
+                        properties:
+                          source:
+                            type: object
+                            required: ["namespaces"]
+                            properties:
+                              namespaces:
+                                description: "List of namespaces from which inbound access is allowed. Pods in these namespaces will be able to access the specified paths and ports in the policyRules."
+                                type: array
+                                items:
+                                  type: string
+                      to:
+                        type: object
+                        required: ["operation"]
+                        properties:
+                          operation:
+                            type: object
+                            properties:
+                              paths:
+                                description: "List of URL paths that are accessible in the AuthorizationPolicy. Only requests to these paths will be allowed."
+                                type: array
+                                items:
+                                  type: string
+                              ports:
+                                description: "List of ports that are accessible in the AuthorizationPolicy. Only traffic to these ports will be allowed."
+                                type: array
+                                items:
+                                  type: string
+                selector:
+                  description: "Selector to match labels on the pods. The Sidecar and AuthorizationPolicy resources will be applied to pods matching these labels."
+                  type: object
+                  additionalProperties:
+                    type: string
+      additionalPrinterColumns:
+      - name: Labels
+        type: string
+        description: "Common labels for Sidecar and AuthorizationPolicy resources."
+        jsonPath: .spec.labels
+      - name: EgressHosts
+        type: string
+        description: "List of hosts for the Sidecar's egress rules."
+        jsonPath: .spec.egressHosts
+      - name: Selector
+        type: string
+        description: "Selector to match labels on the pods."
+        jsonPath: .spec.selector
