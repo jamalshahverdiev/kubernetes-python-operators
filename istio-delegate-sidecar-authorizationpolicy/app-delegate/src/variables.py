@@ -1,5 +1,4 @@
 class Settings:
-    # Add any specific variables here, for example
     istio_group = "networking.istio.io"
     istio_version = "v1alpha3"
     virtual_service_plural = "virtualservices"

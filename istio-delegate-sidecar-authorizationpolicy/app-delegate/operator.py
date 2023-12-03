@@ -24,22 +24,18 @@ def delegator_handler(spec, name, namespace, logger, **kwargs):
     delegatevs = spec.get("delegatevs")
     delegatevsns = spec.get("delegatevsns")
 
-    # Find existing VirtualService
     vs = find_virtual_service(domain, gateway, namespace)
     if vs:
-        # Check if the URI prefix exists
         if not any(
             match.get("uri", {}).get("prefix") == uriprefix
             for http in vs["spec"]["http"]
             for match in http["match"]
         ):
-            # Update VirtualService to include new delegation
             update_virtual_service(vs, uriprefix, delegatevs, delegatevsns)
             logger.info(
                 f"Updated VirtualService {vs['metadata']['name']} in namespace {vs['metadata']['namespace']}"
             )
     else:
-        # Construct and create new VirtualService spec
         vs_spec = load_virtual_service_template(
             Settings.template_file,
             domain,

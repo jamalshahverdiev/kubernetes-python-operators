@@ -4,7 +4,6 @@ from os import getenv, path
 from kubernetes import config, client
 from src.variables import Settings
 
-
 def initialize_kube():
     ENVIRONMENT = getenv("DEV")
     if ENVIRONMENT:
@@ -15,7 +14,6 @@ def initialize_kube():
     else:
         print("Loading In-cluster KUBECONFIG")
         config.load_incluster_config()
-
 
 def find_virtual_service(domain, gateway, namespace):
     api = client.CustomObjectsApi()
@@ -40,13 +38,11 @@ def find_virtual_service(domain, gateway, namespace):
 
     return None
 
-
 def update_virtual_service(vs, uriprefix, delegatevs, delegatevsns):
     api = client.CustomObjectsApi()
     name = vs["metadata"]["name"]
     namespace = vs["metadata"]["namespace"]
 
-    # Adding new delegation to the http list
     new_delegation = {
         "match": [{"uri": {"prefix": uriprefix}}],
         "delegate": {"name": delegatevs, "namespace": delegatevsns},
@@ -71,7 +67,6 @@ def update_virtual_service(vs, uriprefix, delegatevs, delegatevsns):
         error(f"Error updating VirtualService {name} in namespace {namespace}: {e}")
         raise
 
-
 def load_virtual_service_template(
     template_file, domain, gateway, uriprefix, delegatevs, delegatevsns, namespace
 ):
@@ -92,12 +87,10 @@ def load_virtual_service_template(
 
     return repaired_vs_json_file
 
-
 def create_or_update_virtual_service(name, namespace, spec):
     api = client.CustomObjectsApi()
     resource_exists = False
 
-    # Check if the VirtualService already exists
     try:
         existing_vs = api.get_namespaced_custom_object(
             group=Settings.istio_group,
@@ -114,7 +107,6 @@ def create_or_update_virtual_service(name, namespace, spec):
 
     try:
         if resource_exists:
-            # Update existing VirtualService
             api.replace_namespaced_custom_object(
                 group=Settings.istio_group,
                 version=Settings.istio_version,
@@ -125,7 +117,6 @@ def create_or_update_virtual_service(name, namespace, spec):
             )
             info(f"Updated VirtualService {name} in {namespace}")
         else:
-            # Create new VirtualService
             api.create_namespaced_custom_object(
                 group=Settings.istio_group,
                 version=Settings.istio_version,
@@ -138,19 +129,16 @@ def create_or_update_virtual_service(name, namespace, spec):
         error(f"Error creating/updating VirtualService {name} in {namespace}: {e}")
         raise
 
-
 def remove_delegation_from_virtual_service(vs, uriprefix, delegatevs, delegatevsns, logger):
     api = client.CustomObjectsApi()
     name = vs["metadata"]["name"]
     namespace = vs["metadata"]["namespace"]
 
-    # Remove the delegation from the http list
     vs['spec']['http'] = [http for http in vs['spec'].get('http', []) 
                           if not (http.get('delegate', {}).get('name') == delegatevs and 
                                   http.get('delegate', {}).get('namespace') == delegatevsns and 
                                   http.get('match', [{}])[0].get('uri', {}).get('prefix') == uriprefix)]
 
-    # If the http list is now empty, delete the VirtualService
     if not vs['spec']['http']:
         try:
             api.delete_namespaced_custom_object(
@@ -165,7 +153,6 @@ def remove_delegation_from_virtual_service(vs, uriprefix, delegatevs, delegatevs
             error(f"Error deleting VirtualService {name} in namespace {namespace}: {e}")
             raise
     else:
-        # Update the VirtualService with the modified http list
         try:
             api.replace_namespaced_custom_object(
                 group=Settings.istio_group,
@@ -179,8 +166,6 @@ def remove_delegation_from_virtual_service(vs, uriprefix, delegatevs, delegatevs
         except client.ApiException as e:
             error(f"Error updating VirtualService {name} in namespace {namespace}: {e}")
             raise
-
-
 
 def create_or_update_sidecar(name, namespace, spec, logger):
     api = client.CustomObjectsApi()
@@ -220,7 +205,6 @@ def create_or_update_sidecar(name, namespace, spec, logger):
             logger.info(f"Created Sidecar {name} in namespace {namespace}")
         else:
             raise
-
 
 def create_or_update_authorization_policy(name, namespace, spec, logger):
     api = client.CustomObjectsApi()
@@ -279,7 +263,6 @@ def create_or_update_authorization_policy(name, namespace, spec, logger):
             logger.info(f"Created AuthorizationPolicy {name} in namespace {namespace}")
         else:
             raise
-
 
 def delete_sidecar(name, namespace, logger):
     api = client.CustomObjectsApi()
