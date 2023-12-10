@@ -32,3 +32,10 @@ subjects:
 - kind: ServiceAccount
   name: replica-checker-sa
   namespace: replicachecker
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  creationTimestamp: null
+  name: replica-checker-sa
+  namespace: replicachecker
